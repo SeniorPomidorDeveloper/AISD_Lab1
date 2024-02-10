@@ -79,7 +79,7 @@ intMatrix InputIntMatrix()
     }
     return matrix;
 }
-
+    
 void PrintMatrix(intMatrix matrix)
 {
     for (size_t i = 0; i < matrix.len; ++i) {
