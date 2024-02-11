@@ -3,6 +3,7 @@
 
 #include "stddef.h"
 #include "stdlib.h"
+#include "stdbool.h"
 
 typedef struct intLine
 {
@@ -19,7 +20,9 @@ typedef struct intMatrix
 } intMatrix;
 
 void MatrixInit(intMatrix *matrix, const size_t countLines);
-intMatrix *AddLine(intMatrix *matrix, intLine line, const size_t index);
+intMatrix *AddLine(intMatrix *matrix, const intLine line, const size_t index);
+long long int *FindMinInIntLine(const intLine line);
+intLine CopyIntLine(const intLine line);
 void FreeMatrix(intMatrix *matrix);
 
 #endif

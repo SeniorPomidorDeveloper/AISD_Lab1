@@ -5,8 +5,9 @@
 
 intLine InputIntLine();
 intMatrix InputIntMatrix();
-intMatrix Process(intMatrix matirx);
-void PrintMatrix(intMatrix matirx);
+void PrintMatrix(const intMatrix matrix);
+
+intMatrix Process(const intMatrix matrix);
 
 enum PROGRAM_STATUS
 {
@@ -20,15 +21,45 @@ int main()
     if (!matrix.lines) {
         return ERROR;
     }
-    // intMatrix newMatrix = Process(matrix);
-    // if (!newMatrix.lines) {
-    //     return ERROR;
-    // }
+    intMatrix newMatrix = Process(matrix);
+    if (!newMatrix.lines) {
+        return ERROR;
+    }
+    printf("Исходная матрица:\n");
     PrintMatrix(matrix);
-    // PrintMatrix(newMatrix);
+    printf("Результирующая матрица матрица:\n");
+    PrintMatrix(newMatrix);
     FreeMatrix(&matrix);
-    // FreeMatrix(&newMatrix);
+    FreeMatrix(&newMatrix);
     return SUCCESSFULLY;
+}
+
+intMatrix Process(intMatrix matrix)
+{
+    intMatrix newMatrix;
+    MatrixInit(&newMatrix, matrix.len);
+    if (!newMatrix.lines && matrix.len != 0) {
+        printf("[ERROR] Не удалось выделить память!");
+        return newMatrix;
+    }
+    for (size_t i = 0; i < newMatrix.len; ++i) {
+        long long int *minLine = FindMinInIntLine(matrix.lines[i]);
+        intLine line = {matrix.lines[i].len - (minLine - matrix.lines[i].line), minLine};
+        intLine newLine = CopyIntLine(line);
+        if (!newLine.line && newLine.len != 0) {
+            printf("[ERROR] Не удалось выделить память!");
+            FreeMatrix(&newMatrix);
+            FreeMatrix(&matrix);
+            return newMatrix;
+        }
+        if (!AddLine(&newMatrix, newLine, i)) {
+            printf("[ERROR] Не удалось добавить новую строку!");
+            FreeMatrix(&newMatrix);
+            FreeMatrix(&matrix);
+            return newMatrix;
+        }
+    }
+    return newMatrix;
 }
 
 intLine InputIntLine()
@@ -40,6 +71,7 @@ intLine InputIntLine()
     }
     line.line = (long long int *) malloc(len * sizeof(long long int));
     if (!line.line) {
+        printf("[ERROR] Не удалось выделить память!");
         return line;
     }
     for (size_t i = 0; i < len; ++i) {
@@ -64,6 +96,7 @@ intMatrix InputIntMatrix()
     } 
     MatrixInit(&matrix, countLines);
     if (!matrix.lines && countLines != 0) {
+        printf("[ERROR] Не удалось выделить память!");
         return matrix;
     } 
     for (size_t i = 0; i < countLines; ++i) {
@@ -73,6 +106,7 @@ intMatrix InputIntMatrix()
             return matrix;
         }
         if (!AddLine(&matrix, line, i)) {
+            printf("[ERROR] Не удалось добавить новую строку!");
             FreeMatrix(&matrix);
             return matrix;
         }
@@ -80,11 +114,11 @@ intMatrix InputIntMatrix()
     return matrix;
 }
     
-void PrintMatrix(intMatrix matrix)
+void PrintMatrix(const intMatrix matrix)
 {
     for (size_t i = 0; i < matrix.len; ++i) {
         if (matrix.lines[i].len != 0) {
-            printf("%lld", matrix.lines[i].line[0]);
+            printf("\t%lld", matrix.lines[i].line[0]);
             for (size_t j = 1; j < matrix.lines[i].len; ++j) {
                 printf(" %lld", matrix.lines[i].line[j]);
             }
