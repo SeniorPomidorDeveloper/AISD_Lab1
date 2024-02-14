@@ -20,9 +20,9 @@ typedef struct intMatrix
 } intMatrix;
 
 void MatrixInit(intMatrix *matrix, const size_t countLines);
-intMatrix *AddLine(intMatrix *matrix, const intLine line, const size_t index);
-long long int *FindMinInIntLine(const intLine line);
-intLine CopyIntLine(const intLine line);
+intMatrix *AddLine(intMatrix *matrix, const intLine *line, const size_t index);
+long long int *FindMinInIntLine(const intLine *line);
+bool CopyIntLine(const intLine *line, intLine *newLine);
 void FreeMatrix(intMatrix *matrix);
 
 #endif
