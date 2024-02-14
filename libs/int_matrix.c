@@ -1,5 +1,7 @@
 #include "int_matrix.h"
 
+#include "string.h"
+
 void MatrixInit(intMatrix *matrix, const size_t countLines)
 {
     if (countLines != 0) {
@@ -43,9 +45,7 @@ intLine CopyIntLine(const intLine line)
         if (!newLine.line) {
             return newLine;
         }
-        for (size_t i = 0; i < newLine.len; ++i) {
-            newLine.line[i] = line.line[i];
-        }
+        memcpy(newLine.line, line.line, line.len * sizeof(long long int));
     }
     return newLine;
 }
